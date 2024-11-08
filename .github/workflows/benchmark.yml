@@ -28,6 +28,12 @@ env:
 jobs:
   main:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runner-version:
+          - '3.0.0'
+          - '3.1.0'
+          - '3.1.1-beta.1'
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +84,8 @@ jobs:
         with:
           working-directory: py-polars
           run: pytest -m benchmark --codspeed -v
+          upload-url: ${{ secrets.CODSPEED_UPLOAD_URL }}/upload
+          runner-version: ${{ matrix.runner-version }}
 
       - name: Run non-benchmark tests
         working-directory: py-polars
